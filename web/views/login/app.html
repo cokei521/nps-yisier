@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title langtag="title-login"></title>
+    <!-- Mainly scripts -->
+    <!-- Latest compiled and minified CSS -->
+    <link href="{{.web_base_url}}/static/css/fontawesome.min.css" rel="stylesheet">
+    <link href="{{.web_base_url}}/static/css/solid.min.css" rel="stylesheet">
+    <link href="{{.web_base_url}}/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{.web_base_url}}/static/css/style.css" rel="stylesheet">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="{{.web_base_url}}/static/js/jquery-3.4.1.min.js"></script>
+    <script src="{{.web_base_url}}/static/js/bootstrap.min.js"></script>
+    <!-- Latest compiled and minified Locales -->
+    <script src="{{.web_base_url}}/static/js/language.js?v=202512054" type="text/javascript"></script>
+</head>
+<body class="gray-bg">
+<div class="row border-bottom">
+    <nav class="navbar navbar-static-top navbar-right" role="navigation" style="margin: 20px 40px">
+        <div></div>
+
+        <span class="btn-group dropdown">
+                <button id="languagemenu" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false"><i
+                        class="fa fa-globe-asia fa-lg"></i><span></span></button>
+                <ul class="dropdown-menu"></ul>
+            </span>
+    </nav>
+</div>
+<body>
+
+    <div class="login-page">
+        <!-- 背景装饰元素 -->
+        <div class="login-bg">
+            <div class="bg-shape bg-shape-1"></div>
+            <div class="bg-shape bg-shape-2"></div>
+        </div>
+
+        <!-- 登录卡片 -->
+        <div class="login-card">
+            <!-- 左侧品牌区 -->
+            <div class="login-card-left">
+                <div class="login-logo">
+
+                    <span class="logo-text">cokei521内网穿透</span>
+                </div>
+
+                <div class="login-info">
+                    <h2 class="info-title">内网穿透</h2>
+                    <p class="info-desc">无需公网IP，轻松实现内网服务外网访问</p>
+
+                    <div class="login-features">
+                        <div class="feature-item">
+                            <i class="feature-icon"><CheckCircleOutlined /></i>
+                            <span class="feature-text">云端集中管控</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="feature-icon"><CheckCircleOutlined /></i>
+                            <span class="feature-text">多设备多租户管理</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="feature-icon"><CheckCircleOutlined /></i>
+                            <span class="feature-text">域名与证书自动化管理</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="feature-icon"><CheckCircleOutlined /></i>
+                            <span class="feature-text">全协议流量可视化分析</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="feature-icon"><CheckCircleOutlined /></i>
+                            <span class="feature-text">穿透安全防护体系</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="feature-icon"><CheckCircleOutlined /></i>
+                            <span class="feature-text">正反向代理一体化支持</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧表单区 -->
+            <div class="login-card-right">
+                <div class="login-form-container">
+                    <h2 class="form-title">欢迎回来</h2>
+                    <p class="form-subtitle">请登录您的账户继续使用</p>
+
+                    <form class="m-t" onsubmit="return false">
+                        <div class="form-group">
+                            <input name="username" class="form-control" placeholder="username" required=""
+                                   langtag="word-username">
+                        </div>
+                        <div class="form-group">
+                            <input name="password" type="password" class="form-control" placeholder="password" required=""
+                                   langtag="word-password">
+                        </div>
+                        {{if eq true .captcha_open}}
+                        <div class="form-group">
+                            {{create_captcha}}
+                            <input name="captcha" class="form-control" placeholder="captcha" required=""
+                                   langtag="word-captcha">
+                        </div>
+                        {{end}}
+                        <button onclick="login()" class="btn btn-primary block full-width m-b"
+                                langtag="word-login"></button>
+                        {{if eq true .register_allow}}
+                        <p class="text-muted text-center"><small langtag="info-noaccount"></small></p>
+                        <a class="btn btn-sm btn-white btn-block" href="{{.web_base_url}}/login/register"
+                           langtag="word-register"></a>
+                        {{end}}
+                    </form>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        window.nps = {"web_base_url": {{.web_base_url}} }
+
+        // Login Page Flipbox control
+        function login() {
+            $.ajax({
+                type: "POST",
+                url: "{{.web_base_url}}/login/verify",
+                data: $("form").serializeArray(),
+                success: function (res) {
+                    if (res.status) {
+                        window.location.href = "{{.web_base_url}}/index/index"
+                    } else {
+                        alert(res.msg)
+                    }
+                }
+            })
+            return false
+        }
+    </script>
+
+<style scoped lang="less">
+    .login-page {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f0f2f5;
+      position: relative;
+      overflow: hidden;
+
+      .login-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+
+        .bg-shape {
+          position: absolute;
+          width: 600px;
+          height: 600px;
+          border-radius: 50%;
+          filter: blur(100px);
+          opacity: 0.3;
+        }
+
+        .bg-shape-1 {
+          background-color: #4b6ff6;
+          top: -300px;
+          left: -300px;
+        }
+
+        .bg-shape-2 {
+          background-color: #1890ff;
+          bottom: -300px;
+          right: -300px;
+        }
+      }
+    }
+
+    .login-card {
+      display: flex;
+      width: 900px;
+      height: 600px;
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+
+      @media (max-width: 992px) {
+        width: 90%;
+        height: auto;
+        flex-direction: column;
+      }
+
+      .login-card-left {
+        flex: 1;
+        background: linear-gradient(135deg, #4b6ff6 0%, #1890ff 100%);
+        color: white;
+        padding: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        @media (max-width: 992px) {
+          padding: 40px;
+        }
+
+        .login-logo {
+          display: flex;
+          align-items: center;
+
+          .logo-image {
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+          }
+
+          .logo-text {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 600;
+          }
+        }
+
+        .login-info {
+          .info-title {
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: 500;
+            margin-bottom: 20px;
+          }
+
+          .info-desc {
+            font-size: 16px;
+            opacity: 0.8;
+            margin-bottom: 40px;
+          }
+
+          .login-features {
+            .feature-item {
+              display: flex;
+              align-items: center;
+              margin-bottom: 15px;
+
+              .feature-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 24px;
+                height: 24px;
+                background-color: rgba(255, 255, 255, 0.2);
+                border-radius: 50%;
+                margin-right: 10px;
+              }
+
+              .feature-text {
+                opacity: 0.9;
+              }
+            }
+          }
+        }
+      }
+
+      .login-card-right {
+        flex: 1;
+        padding: 60px;
+        display: flex;
+        align-items: center;
+
+        @media (max-width: 992px) {
+          padding: 40px;
+        }
+
+        .login-form-container {
+          width: 100%;
+
+          .form-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #28313b;
+            margin-bottom: 10px;
+          }
+
+          .form-subtitle {
+            font-size: 16px;
+            color: #808695;
+            margin-bottom: 40px;
+          }
+
+          .form-input {
+            height: 50px;
+            border-radius: 8px;
+            border: 1px solid #d9d9d9;
+
+            &:focus {
+              border-color: #4b6ff6;
+              box-shadow: 0 0 0 2px rgba(75, 111, 246, 0.2);
+            }
+          }
+
+          .input-icon {
+            color: #808695;
+            font-size: 18px;
+          }
+
+          .remember-me {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+
+            .forgot-password {
+              color: #4b6ff6;
+              text-decoration: none;
+
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+
+          .login-button {
+            height: 50px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #4b6ff6 0%, #1890ff 100%);
+            font-size: 16px;
+            font-weight: 500;
+
+            &:hover, &:focus {
+              background-color: #3a5ee6;
+              border-color: #3a5ee6;
+            }
+          }
+
+          .login-register {
+            text-align: center;
+            margin-top: 20px;
+            color: #808695;
+
+            .register-link {
+              color: #4b6ff6;
+              text-decoration: none;
+              font-weight: 500;
+
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    /* 动画效果 */
+    .login-card {
+      animation: fadeIn 0.6s ease-out;
+
+      .login-card-left {
+        animation: slideInLeft 0.6s ease-out;
+      }
+
+      .login-card-right {
+        animation: slideInRight 0.6s ease-out;
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes slideInLeft {
+      from { transform: translateX(-100px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(100px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* 表单元素动画 */
+    .form-input {
+      transition: all 0.3s ease;
+    }
+
+    .login-button {
+      transition: all 0.3s ease;
+      transform: translateY(0);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(75, 111, 246, 0.3);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+</style>
+</body>
+</html>
